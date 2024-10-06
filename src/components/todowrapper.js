@@ -1,10 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ToDoForm } from './todoform'
 import ToDo from './todo'
 import { EditToDoForm } from './editToDoForm'
 
 const ToDoWrapper = () => {
-  const [todos, setTodos] = useState([])
+  //load initial state from the localstorage---
+  const [todos, setTodos] = useState(()=>{
+    const saveTodos = localStorage.getItem('todos')
+    return saveTodos ? JSON.parse(saveTodos) : []
+  })
+  //update localstorage whenever state changes
+  useEffect(()=>{
+    localStorage.setItem('todos', JSON.stringify(todos))
+  }, [todos])
+
   const addTodo = todo => {
     setTodos([...todos, { id: Date.now(), task: todo, completed: false, isEditing: false }])
   }
